@@ -1,10 +1,24 @@
 import { useCallback } from "react";
 
 const subscriberState = {
-  value1: 0,
-  value2: 0,
   subscribers1: [] as ((value: number) => void)[],
   subscribers2: [] as ((value: number) => void)[],
+  _value1: 0,
+  get value1() {
+    return subscriberState._value1;
+  },
+  set value1(value: number) {
+    subscriberState._value1 = value;
+    subscriberState.subscribers1.forEach((callback) => callback(value));
+  },
+  _value2: 0,
+  get value2() {
+    return subscriberState._value2;
+  },
+  set value2(value: number) {
+    subscriberState._value2 = value;
+    subscriberState.subscribers2.forEach((callback) => callback(value));
+  },
 };
 
 export const useSubscriberState = () => {
@@ -37,9 +51,6 @@ export const useSubscriberState = () => {
       } else {
         subscriberState.value1 = updater(subscriberState.value1);
       }
-      subscriberState.subscribers1.forEach((callback) =>
-        callback(subscriberState.value1)
-      );
     },
     []
   );
@@ -51,9 +62,6 @@ export const useSubscriberState = () => {
       } else {
         subscriberState.value2 = updater(subscriberState.value2);
       }
-      subscriberState.subscribers2.forEach((callback) =>
-        callback(subscriberState.value2)
-      );
     },
     []
   );
